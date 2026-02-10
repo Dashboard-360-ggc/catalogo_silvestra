@@ -1,11 +1,4 @@
-const SHEET_ID = '1cVxDqnYc4vRFFumx38M3UwHYwC8gBtFIqFqd9Ep3q1Y';
-const SHEET_NAME_PLANTAS = 'CATALOGO_PLANTAS';
-const SHEET_NAME_COCTELES = 'CATALOGO_COCTELES'; // Crear después
-
-let productosCache = {
-    plantas: [],
-    cocteles: []
-};
+const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRDT76hxjB5fjAnmD7MQmZElz0Fh33Gl0I0Em32YlSucr9toCypjyqSaSykrtkQFrXAta32bkQH_noe/pub?gid=1376617034&single=true&output=csv';
 
 function irA(categoria) {
     document.getElementById('inicio').classList.add('oculto');
@@ -26,39 +19,32 @@ async function cargarProductos(categoria) {
     grid.innerHTML = '<p style="color: white; text-align: center; font-size: 1.5rem;">Cargando...</p>';
     
     try {
-        if (productosCache[categoria].length > 0) {
-            renderizarProductos(productosCache[categoria]);
-            return;
+        const cached = localStorage.getItem('productos_plantas');
+        if (cached) {
+            renderizarProductos(JSON.parse(cached));
         }
         
-        const sheetName = categoria === 'plantas' ? SHEET_NAME_PLANTAS : SHEET_NAME_COCTELES;
-        const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${sheetName}`;
-        
-        const response = await fetch(url);
+        const response = await fetch(CSV_URL);
         const text = await response.text();
-        const json = JSON.parse(text.substring(47).slice(0, -2));
         
-        const rows = json.table.rows;
-        const productos = rows.slice(1).map(row => ({
-            nombre: row.c[1]?.v || '',
-            cientifico: row.c[2]?.v || '',
-            foto: row.c[4]?.v || '',
-            descripcion: row.c[5]?.v || '',
-            precio: row.c[7]?.v || ''
-        })).filter(p => p.nombre && p.foto);
+        const lines = text.split('\n').slice(1);
+        const productos = lines.map(line => {
+            const cols = line.split(',');
+            return {
+                nombre: cols[1]?.replace(/"/g, '') || '',
+                cientifico: cols[2]?.replace(/"/g, '') || '',
+                foto: cols[4]?.replace(/"/g, '') || '',
+                descripcion: cols[5]?.replace(/"/g, '') || '',
+                precio: cols[7]?.replace(/"/g, '') || ''
+            };
+        }).filter(p => p.nombre && p.foto);
         
-        productosCache[categoria] = productos;
-        localStorage.setItem(`productos_${categoria}`, JSON.stringify(productos));
-        
+        localStorage.setItem('productos_plantas', JSON.stringify(productos));
         renderizarProductos(productos);
         
     } catch (error) {
-        const cached = localStorage.getItem(`productos_${categoria}`);
-        if (cached) {
-            renderizarProductos(JSON.parse(cached));
-        } else {
-            grid.innerHTML = '<p style="color: white; text-align: center;">Error al cargar productos</p>';
-        }
+        console.error(error);
+        grid.innerHTML = '<p style="color: white; text-align: center;">Error: ' + error.message + '</p>';
     }
 }
 
@@ -66,7 +52,7 @@ function renderizarProductos(productos) {
     const grid = document.getElementById('grid-productos');
     
     if (productos.length === 0) {
-        grid.innerHTML = '<p style="color: white; text-align: center;">No hay productos disponibles</p>';
+        grid.innerHTML = '<p style="color: white; text-align: center;">No hay productos</p>';
         return;
     }
     
