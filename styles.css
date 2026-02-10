@@ -1,0 +1,132 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    color: #fff;
+    min-height: 100vh;
+}
+
+.pantalla-inicio {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    gap: 2rem;
+    padding: 2rem;
+}
+
+.pantalla-inicio h1 {
+    font-size: 3rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #f8b500;
+}
+
+.boton-categoria {
+    width: 80%;
+    max-width: 400px;
+    padding: 2rem 3rem;
+    font-size: 2rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.boton-plantas {
+    background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+    color: white;
+}
+
+.boton-cocteles {
+    background: linear-gradient(135deg, #FF6B35 0%, #D84315 100%);
+    color: white;
+}
+
+.boton-categoria:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.oculto {
+    display: none !important;
+}
+
+.catalogo {
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.btn-volver {
+    background: #444;
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 10px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    margin-bottom: 2rem;
+}
+
+.grid-productos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.producto-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    transition: transform 0.2s;
+}
+
+.producto-card:hover {
+    transform: translateY(-5px);
+}
+
+.producto-card img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+}
+
+.producto-info {
+    padding: 1.5rem;
+    color: #333;
+}
+
+.producto-nombre {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: #2d2d2d;
+}
+
+.producto-cientifico {
+    font-style: italic;
+    color: #666;
+    margin-bottom: 1rem;
+}
+
+.producto-descripcion {
+    color: #555;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+}
+
+.producto-precio {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #4CAF50;
+}
