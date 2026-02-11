@@ -27,6 +27,7 @@ body {
     text-align: center;
     margin-bottom: 2rem;
     color: #f8b500;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
 }
 
 .boton-categoria {
@@ -39,6 +40,7 @@ body {
     border-radius: 20px;
     cursor: pointer;
     transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
 }
 
 .boton-plantas {
@@ -53,7 +55,7 @@ body {
 
 .boton-categoria:hover {
     transform: scale(1.05);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    box-shadow: 0 12px 35px rgba(0,0,0,0.4);
 }
 
 .oculto {
@@ -62,56 +64,122 @@ body {
 
 .catalogo {
     padding: 1rem;
-    max-width: 1600px;
+    max-width: 1800px;
     margin: 0 auto;
 }
 
 .btn-volver {
-    background: #444;
+    background: linear-gradient(135deg, #555 0%, #333 100%);
     color: white;
     border: none;
     padding: 1rem 2rem;
-    border-radius: 10px;
+    border-radius: 12px;
     font-size: 1.2rem;
+    font-weight: 600;
     cursor: pointer;
     margin-bottom: 1rem;
     position: fixed;
     top: 20px;
     left: 20px;
     z-index: 100;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    transition: all 0.2s;
+}
+
+.btn-volver:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.5);
 }
 
 #titulo-categoria {
     text-align: center;
-    margin: 80px 0 20px 0;
-    font-size: 2rem;
+    margin: 80px 0 30px 0;
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
 }
 
 .grid-productos {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 1.5rem;
-    padding: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 2rem;
+    padding: 2rem;
 }
 
 .producto-card {
-    background: transparent;
-    border-radius: 15px;
+    background: linear-gradient(135deg, #2a2a2a 0%, #1f1f1f 100%);
+    border-radius: 20px;
     overflow: hidden;
     cursor: pointer;
-    transition: transform 0.2s;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+    border: 1px solid rgba(255,255,255,0.1);
 }
 
 .producto-card:hover {
-    transform: scale(1.05);
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.6);
 }
 
 .producto-card img {
     width: 100%;
-    height: 450px;
+    height: 300px;
     object-fit: cover;
     display: block;
+    border-bottom: 3px solid #4CAF50;
+}
+
+.producto-info {
+    padding: 1.5rem;
+}
+
+.producto-nombre {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #f8b500;
+    margin-bottom: 0.5rem;
+    text-transform: capitalize;
+}
+
+.producto-cientifico {
+    font-size: 1rem;
+    color: #aaa;
+    font-style: italic;
+    margin-bottom: 1rem;
+}
+
+.producto-descripcion {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #ddd;
+    margin-bottom: 1rem;
+    text-align: justify;
+}
+
+.producto-cuidados {
+    background: rgba(76, 175, 80, 0.15);
+    padding: 1rem;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: #e0e0e0;
+    margin-bottom: 1rem;
+    border-left: 4px solid #4CAF50;
+}
+
+.producto-cuidados strong {
+    color: #4CAF50;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.producto-precio {
+    font-size: 2rem;
+    font-weight: 900;
+    color: #4CAF50;
+    text-align: right;
+    margin-top: 1rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 
 /* Lightbox */
@@ -142,6 +210,7 @@ body {
     max-width: 100%;
     max-height: 90vh;
     object-fit: contain;
+    border-radius: 10px;
 }
 
 .lightbox-close {
@@ -150,7 +219,7 @@ body {
     right: 20px;
     font-size: 3rem;
     color: white;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0,0,0,0.7);
     width: 60px;
     height: 60px;
     border-radius: 50%;
@@ -158,7 +227,13 @@ body {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    border: none;
+    border: 2px solid white;
+    transition: all 0.2s;
+}
+
+.lightbox-close:hover {
+    background: rgba(255,0,0,0.8);
+    transform: scale(1.1);
 }
 
 .lightbox-nav {
@@ -167,7 +242,7 @@ body {
     transform: translateY(-50%);
     font-size: 3rem;
     color: white;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0,0,0,0.7);
     width: 60px;
     height: 60px;
     border-radius: 50%;
@@ -175,7 +250,13 @@ body {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    border: none;
+    border: 2px solid white;
+    transition: all 0.2s;
+}
+
+.lightbox-nav:hover {
+    background: rgba(76, 175, 80, 0.9);
+    transform: translateY(-50%) scale(1.1);
 }
 
 .lightbox-prev {
@@ -184,4 +265,21 @@ body {
 
 .lightbox-next {
     right: 20px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .grid-productos {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        padding: 1rem;
+    }
+    
+    #titulo-categoria {
+        font-size: 2rem;
+    }
+    
+    .producto-nombre {
+        font-size: 1.3rem;
+    }
 }
