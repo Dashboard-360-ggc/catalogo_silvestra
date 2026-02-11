@@ -53,7 +53,7 @@ async function cargarProductos(categoria) {
     try {
         const cached = localStorage.getItem(`productos_${categoria}`);
         if (cached) {
-            renderizarProductos(JSON.parse(cached));
+            renderizarProductos(JSON.parse(cached), categoria);
         }
         
         const csvUrl = categoria === 'plantas' ? CSV_URL_PLANTAS : CSV_URL_COCTELES;
@@ -68,6 +68,7 @@ async function cargarProductos(categoria) {
                     foto: cols[1] || '',
                     cientifico: '',
                     descripcion: '',
+                    cuidados: '',
                     precio: ''
                 };
             } else {
@@ -76,13 +77,14 @@ async function cargarProductos(categoria) {
                     cientifico: cols[2] || '',
                     foto: cols[4] || '',
                     descripcion: cols[5] || '',
+                    cuidados: cols[6] || '',
                     precio: cols[7] || ''
                 };
             }
         }).filter(p => p.nombre && p.foto);
         
         localStorage.setItem(`productos_${categoria}`, JSON.stringify(productos));
-        renderizarProductos(productos);
+        renderizarProductos(productos, categoria);
         
     } catch (error) {
         console.error(error);
@@ -92,9 +94,11 @@ async function cargarProductos(categoria) {
 
 let imagenesActuales = [];
 let indiceActual = 0;
+let categoriaActual = '';
 
-function renderizarProductos(productos) {
+function renderizarProductos(productos, categoria) {
     const grid = document.getElementById('grid-productos');
+    categoriaActual = categoria;
     
     if (productos.length === 0) {
         grid.innerHTML = '<p style="color: white;">No hay productos</p>';
@@ -103,11 +107,28 @@ function renderizarProductos(productos) {
     
     imagenesActuales = productos.map(p => p.foto);
     
-    grid.innerHTML = productos.map((p, index) => `
-        <div class="producto-card" onclick="abrirLightbox(${index})">
-            <img src="${p.foto}" alt="${p.nombre}" loading="lazy">
-        </div>
-    `).join('');
+    if (categoria === 'cocteles') {
+        // CÓCTELES: Solo fotos
+        grid.innerHTML = productos.map((p, index) => `
+            <div class="producto-card" onclick="abrirLightbox(${index})">
+                <img src="${p.foto}" alt="${p.nombre}" loading="lazy">
+            </div>
+        `).join('');
+    } else {
+        // PLANTAS: Cards con info completa
+        grid.innerHTML = productos.map((p, index) => `
+            <div class="producto-card">
+                <img src="${p.foto}" alt="${p.nombre}" loading="lazy" onclick="abrirLightbox(${index})" style="cursor: pointer;">
+                <div class="producto-info">
+                    <div class="producto-nombre">${p.nombre}</div>
+                    ${p.cientifico ? `<div class="producto-cientifico">${p.cientifico}</div>` : ''}
+                    ${p.descripcion ? `<div class="producto-descripcion">${p.descripcion}</div>` : ''}
+                    ${p.cuidados ? `<div class="producto-cuidados"><strong>Cuidados:</strong> ${p.cuidados}</div>` : ''}
+                    ${p.precio ? `<div class="producto-precio">$${p.precio}</div>` : ''}
+                </div>
+            </div>
+        `).join('');
+    }
     
     // Crear lightbox si no existe
     if (!document.getElementById('lightbox')) {
@@ -143,4 +164,8 @@ function navegarLightbox(direccion) {
     if (indiceActual < 0) indiceActual = imagenesActuales.length - 1;
     if (indiceActual >= imagenesActuales.length) indiceActual = 0;
     document.getElementById('lightbox-img').src = imagenesActuales[indiceActual];
+}
+
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/catalogo_silvestra/sw.js').catch(() => {});
 }
