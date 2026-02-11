@@ -90,6 +90,9 @@ async function cargarProductos(categoria) {
     }
 }
 
+let imagenesActuales = [];
+let indiceActual = 0;
+
 function renderizarProductos(productos) {
     const grid = document.getElementById('grid-productos');
     
@@ -98,19 +101,46 @@ function renderizarProductos(productos) {
         return;
     }
     
-    grid.innerHTML = productos.map(p => `
-        <div class="producto-card">
-            <img src="${p.foto}" alt="${p.nombre}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x250?text=Sin+Imagen'">
-            <div class="producto-info">
-                <div class="producto-nombre">${p.nombre}</div>
-                ${p.cientifico ? `<div class="producto-cientifico">${p.cientifico}</div>` : ''}
-                <div class="producto-descripcion">${p.descripcion}</div>
-                ${p.precio ? `<div class="producto-precio">$${p.precio}</div>` : ''}
-            </div>
+    imagenesActuales = productos.map(p => p.foto);
+    
+    grid.innerHTML = productos.map((p, index) => `
+        <div class="producto-card" onclick="abrirLightbox(${index})">
+            <img src="${p.foto}" alt="${p.nombre}" loading="lazy">
         </div>
     `).join('');
+    
+    // Crear lightbox si no existe
+    if (!document.getElementById('lightbox')) {
+        const lightbox = document.createElement('div');
+        lightbox.id = 'lightbox';
+        lightbox.className = 'lightbox';
+        lightbox.innerHTML = `
+            <button class="lightbox-close" onclick="cerrarLightbox()">×</button>
+            <button class="lightbox-nav lightbox-prev" onclick="navegarLightbox(-1)">‹</button>
+            <div class="lightbox-content">
+                <img id="lightbox-img" class="lightbox-img" src="" alt="">
+            </div>
+            <button class="lightbox-nav lightbox-next" onclick="navegarLightbox(1)">›</button>
+        `;
+        document.body.appendChild(lightbox);
+    }
 }
 
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/catalogo_silvestra/sw.js').catch(() => {});
+function abrirLightbox(index) {
+    indiceActual = index;
+    const lightbox = document.getElementById('lightbox');
+    const img = document.getElementById('lightbox-img');
+    img.src = imagenesActuales[index];
+    lightbox.classList.add('active');
+}
+
+function cerrarLightbox() {
+    document.getElementById('lightbox').classList.remove('active');
+}
+
+function navegarLightbox(direccion) {
+    indiceActual += direccion;
+    if (indiceActual < 0) indiceActual = imagenesActuales.length - 1;
+    if (indiceActual >= imagenesActuales.length) indiceActual = 0;
+    document.getElementById('lightbox-img').src = imagenesActuales[indiceActual];
 }
